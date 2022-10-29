@@ -5,6 +5,16 @@ import { FcGoogle } from "react-icons/fc";
 import shareVideo from "../assets/share.mp4";
 import logo from "../assets/logowhite.png";
 const Login = () => {
+  const responseGoogle = (response) => {
+    localStorage.setItem("user".JSON.stringfy(response.progileObj));
+    const { name, googleId, imageUrl } = response.progileObj;
+    const doc = {
+      _id: googleId,
+      _type: "user",
+      userName: name,
+      image: imageUrl
+    };
+  };
   return (
     <div className="flex justify-start items-center flec-col h-screen">
       <div className="relative w-full h-full">
@@ -15,6 +25,7 @@ const Login = () => {
           controls={false}
           muted
           autoPlay
+          className="object-cover w-full h-full"
         />
       </div>
       <div className="absolute flex flex-col justify-center items-center top-0 right-0 left-0 bottom-0 ">
@@ -22,7 +33,22 @@ const Login = () => {
           <img src={logo} width="130px" alt="logo"></img>
         </div>
         <div className="shadow-2x1">
-          {/* <GoogleLogin clientId="" /> */}
+          <GoogleLogin
+            clientId={process.env.REACT_APP_GOOGLE_API_TOKEN}
+            render={(renderProps) => (
+              <button
+                type="button"
+                className="bg-mainColor flex justify-center items-center p-3 rounded-lg cursor-pointer online-none"
+                onClick={renderProps.onClick}
+                disabled={renderProps.disabled}
+              >
+                <FcGoogle className="mr-4" /> Sign in with google
+              </button>
+            )}
+            onSuccess={responseGoogle}
+            onFailure={responseGoogle}
+            cookiePolicy="single_host_origin"
+          />
         </div>
       </div>
     </div>
